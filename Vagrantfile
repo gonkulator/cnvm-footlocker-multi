@@ -97,25 +97,13 @@ end
 
 Vagrant.configure("2") do |config|
 
-#config.vm.box = "coreos-%s" % $update_channel
-#  config.vm.box_version = ">= 308.0.1"
-#  config.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant.json" % $update_channel
-#  config.vm.boot_timeout = 1000
-
-config.vm.box = "ubuntu/ubuntu-15.04"
-config.vm.box_url = "https://vagrantcloud.com/ubuntu/boxes/ubuntu-15.04-snappy-core-stable.json"
+config.vm.box = "boxcutter/ubuntu1504"
+config.vm.box_url = "https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1504.json"
 config.vm.boot_timeout = 1000
 
-#  config.vm.provider :vmware_fusion do |vb, override|
-#    override.vm.box_url = "http://%s.release.core-os.net/amd64-usr/current/coreos_production_vagrant_vmware_fusion.json" % #$update_channel
-#  end
-
- # config.vm.provider :virtualbox do |v|
- #   # On VirtualBox, we don't have guest additions or a functional vboxsf
- #   # in CoreOS, so tell Vagrant that so it can be smarter.
- #   v.check_guest_additions = false
- #   v.functional_vboxsf     = false
- # end
+  config.vm.provider :vmware_fusion do |vb, override|
+  override.vm.box_url = "https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1504.json"
+  end
   
 	
  ["google"].each do |google|
@@ -156,30 +144,12 @@ config.vm.boot_timeout = 1000
     config.vbguest.auto_update = false
   end
 
-  (1..$num_instances).each do |i|
+#Name the hosts 
+
+  (0..$num_instances).each do |i|
     config.vm.define vm_name = "cnvm-%02d" % i do |config|
       config.vm.hostname = vm_name
       ssh_port = (ssh_port + 1)
-#If this is core-01 - make it the weave master - and if vmware or google, use the vmware user-data templates
-#because it needs to use the private ip's versus the public ip's
-   #   if config.vm.hostname == "core-01"
-	#if provider_is_vmware or provider_is_google or provider_is_azure
-	#theuserdata = File.read("user-data.weavemaster.vmware")
-  #      cloud_config_path = File.join(File.dirname(__FILE__), "user-data.weavemaster.vmware")
-	#else
-	#theuserdata = File.read("user-data.weavemaster")
-	#cloud_config_path = File.join(File.dirname(__FILE__), "user-data.weavemaster")
-	#end
-	#else
-#otherwise - if its not core-01 - and provider is google or vmware - set the non-master user-data file
- #       if provider_is_vmware or provider_is_google or provider_is_azure
-#	theuserdata =  File.read("user-data.vmware")
-#	cloud_config_path = File.join(File.dirname(__FILE__), "user-data.vmware")
-#	else
-#otherwise - just set it to the user-data file
-#	theuserdata = File.read("user-data")
-#	cloud_config_path = File.join(File.dirname(__FILE__), "user-data")
-#	end
   end
 
       if $enable_serial_logging
@@ -262,17 +232,17 @@ config.vm.boot_timeout = 1000
      
      ##do the google setup
      ["google"].each do |google|
-	config.vm.provider google do |g, override|
-		g.google_project_id = ENV['GC_PROJECT']
-		g.google_client_email = ENV['GC_CLIENT_EMAIL']
-		g.google_key_location = ENV['GC_KEY_LOCATION']
-		g.machine_type = ENV['GC_MACHINETYPE']
-		g.image = ENV['GC_IMAGE']
-		g.name = vm_name
-		#g.metadata = {'user-data' => theuserdata }
-		override.ssh.username = "ubuntu"
-		override.ssh.private_key_path = ENV['GC_OVERRIDE_KEY']
-		end
+	     config.vm.provider google do |g, override|
+		    g.google_project_id = ENV['GC_PROJECT']
+		    g.google_client_email = ENV['GC_CLIENT_EMAIL']
+		    g.google_key_location = ENV['GC_KEY_LOCATION']
+		    g.machine_type = ENV['GC_MACHINETYPE']
+		    g.image = ENV['GC_IMAGE']
+		    g.name = vm_name
+		    #g.metadata = {'user-data' => theuserdata }
+		    override.ssh.username = "ubuntu"
+		    override.ssh.private_key_path = ENV['GC_OVERRIDE_KEY']
+		    end
 	    end
 
      ##do the aws setup
@@ -281,29 +251,28 @@ config.vm.boot_timeout = 1000
                 a.access_key_id = ENV['AWS_KEY']
                 a.secret_access_key = ENV['AWS_SECRET']
                 a.keypair_name = ENV['AWS_KEYNAME']
-		a.region = ENV['AWS_REGION'] 
-		a.instance_type = ENV['AWS_INSTANCE']
-		a.security_groups =  ENV['AWS_SECURITYGROUP']
-		a.ami = ENV['AWS_AMI']
-#		a.user_data = theuserdata
+		            a.region = ENV['AWS_REGION'] 
+		            a.instance_type = ENV['AWS_INSTANCE']
+		            a.security_groups =  ENV['AWS_SECURITYGROUP']
+		            a.ami = ENV['AWS_AMI']
                 override.ssh.private_key_path = ENV['AWS_KEYPATH']
                 override.ssh.username = "ubuntu"
-           end
-	end
+              end
+      end
 
-#If the provider is azure - seed the user_data file into the right director for the default cloudinit unit to pick it up
-#DO PROVISIONER STUFF AFTER BOOT
-#	if provider_is_azure
-#	config.vm.provision :shell, :inline => "mkdir -p /var/lib/coreos-install/", :privileged => true
-#	config.vm.provision :file, :source => "#{cloud_config_path}", :destination => "/tmp/vagrantfile-user-data"
-#	config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-install/user_data", :privileged => true
-#	end
-#If the provider is google or aws - do not try to do the file/shell providers
-#	unless provider_is_aws or provider_is_google or provider_is_digital_ocean or provider_is_azure
- #       config.vm.provision :file, :source => "#{cloud_config_path}", :destination => "/tmp/vagrantfile-user-data"
-  #      config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
-	#end
-
+   
     end
-  end
-#end
+
+#begin provisioner block
+#  config.vm.hostname = vm_name
+#  config.vm.provision :shell, :inline => "hostname #{vm_name} && touch /tmp/iwashere.$$", :privileged => true
+
+      (0..$num_instances).each do |i|
+          config.vm.define vm_name = "%s-%02d" % ["cnvm", i] do |config|
+            config.vm.hostname = vm_name
+            config.vm.provision "shell", inline: [
+            "hostname #{vm_name}",
+            ].join('&&')
+          end
+      end
+end
