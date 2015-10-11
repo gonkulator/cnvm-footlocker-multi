@@ -146,7 +146,7 @@ config.vm.boot_timeout = 1000
 
 #Name the hosts 
 
-  (0..$num_instances).each do |i|
+  (0..$num_instances-1).each do |i|
     config.vm.define vm_name = "cnvm-%02d" % i do |config|
       config.vm.hostname = vm_name
       ssh_port = (ssh_port + 1)
@@ -267,12 +267,21 @@ config.vm.boot_timeout = 1000
 #  config.vm.hostname = vm_name
 #  config.vm.provision :shell, :inline => "hostname #{vm_name} && touch /tmp/iwashere.$$", :privileged => true
 
-      (0..$num_instances).each do |i|
-          config.vm.define vm_name = "%s-%02d" % ["cnvm", i] do |config|
+      (0..$num_instances-1).each do |i|
+         config.vm.define vm_name = "%s-%02d" % ["cnvm", i] do |config|
             config.vm.hostname = vm_name
+            ips = %x[echo #{vm_name} >> thehosts]
+            ips = %x[sort -u thehosts > therunninghosts]
             config.vm.provision "shell", inline: [
             "hostname #{vm_name}",
+            "ssh-keygen -f id_rsa -t rsa -N ''",
+            "if [ -f /root/.ssh ] ; then cat id_rsa.pub >> /root/.ssh/authorized_keys && cp id_rsa* /root/.ssh else mkdir /root/.ssh && cat id_rsa.pub >> /root/.ssh/authorized_keys && cp id_rsa* /root/.ssh; fi",
+#            "cat id_rsa.pub >> /root/.ssh/authorized_keys"
+#            "cd /root/.ssh && ssh-keygen -f id_rsa -t rsa -N ''",
+#            "cd /root/.ssh && cat id_rsa.pub >> /root/.ssh/authorized_keys",
+#            "mkdir ~/thekeys && sudo cp /root/.ssh/id_rsa* ~/thekeys",
+             "chown $SUDO_USER id_rsa*"
             ].join('&&')
-          end
+        end
       end
 end
