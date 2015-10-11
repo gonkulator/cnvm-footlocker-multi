@@ -1,13 +1,17 @@
 #!/bin/sh
 #dc mass footlocker bootstrap
 
-vagrant up --provider=$1
 
 #zero the host state files
-#touch thehosts
-#touch therunninghosts
-#>thehosts
-#>therunninghosts
+touch thehosts
+touch therunninghosts
+>thehosts
+>therunninghosts
+
+
+vagrant up --provider=$1
+
+
 
 mkdir sshconfigs
 vagrant ssh-config cnvm-00 > sshconfigs/cnvm-00-sshconfig
@@ -56,12 +60,16 @@ scp -P ${masterport} -i ${mastersshkey} thekeys/keyscanner.sh ${masteruser}@${ma
 ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} "sudo ~/keyscanner.sh ${keyscantargets}"
 
 echo "Kicking off Cloud Native VM footlocker builds..."
-
+footlockertargets=$(cd ./sshconfigs && for i in $(ls | grep -v cnvm-00) ; do cat $i | head -2 | grep HostName | awk '{print $2}' ;done | xargs | sed s/\ /,/g)
+echo "Pulling build container...."
+ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} "docker pull gonkulatorlabs/cnvm"
+echo "Building...."
+ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm
 
 echo "Cleaning up..."
-#rm sshconfigs/*
-#rm thekeys/id_rsa*
-#rm thehosts
-#rm therunninghosts
+rm sshconfigs/*
+rm thekeys/id_rsa*
+rm thehosts
+rm therunninghosts
 
 echo "Done."
