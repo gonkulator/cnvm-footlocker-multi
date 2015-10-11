@@ -2,51 +2,51 @@
 # To automatically replace the discovery token on 'vagrant up', uncomment
 # the lines below:
 #
-if File.exists?('user-data') && ARGV[0].eql?('up')
-  require 'open-uri'
-  require 'yaml'
+#if File.exists?('user-data') && ARGV[0].eql?('up')
+#  require 'open-uri'
+#  require 'yaml'
  
-  token = open('https://discovery.etcd.io/new').read
+#  token = open('https://discovery.etcd.io/new').read
  
-  data = YAML.load(IO.readlines('user-data')[1..-1].join)
-  data['coreos']['etcd']['discovery'] = token
+#  data = YAML.load(IO.readlines('user-data')[1..-1].join)
+#  data['coreos']['etcd']['discovery'] = token
  
-  yaml = YAML.dump(data)
-  File.open('user-data', 'w') { |file| file.write("#cloud-config\n\n#{yaml}") }
-end
+#  yaml = YAML.dump(data)
+#  File.open('user-data', 'w') { |file| file.write("#cloud-config\n\n#{yaml}") }
+#end
 
-if File.exists?('user-data.weavemaster') && ARGV[0].eql?('up')
-  require 'open-uri'
-  require 'yaml'
+#if File.exists?('user-data.weavemaster') && ARGV[0].eql?('up')
+#  require 'open-uri'
+#  require 'yaml'
 
-  data = YAML.load(IO.readlines('user-data.weavemaster')[1..-1].join)
-  data['coreos']['etcd']['discovery'] = token
+#  data = YAML.load(IO.readlines('user-data.weavemaster')[1..-1].join)
+#  data['coreos']['etcd']['discovery'] = token
 
-  yaml = YAML.dump(data)
-  File.open('user-data.weavemaster', 'w') { |file| file.write("#cloud-config\n\n#{yaml}") }
-end
+#  yaml = YAML.dump(data)
+#  File.open('user-data.weavemaster', 'w') { |file| file.write("#cloud-config\n\n#{yaml}") }
+#end
 
-if File.exists?('user-data.weavemaster.vmware') && ARGV[0].eql?('up')
-  require 'open-uri'
-  require 'yaml'
+#if File.exists?('user-data.weavemaster.vmware') && ARGV[0].eql?('up')
+#  require 'open-uri'
+#  require 'yaml'
 
-  data = YAML.load(IO.readlines('user-data.weavemaster.vmware')[1..-1].join)
-  data['coreos']['etcd']['discovery'] = token
+#  data = YAML.load(IO.readlines('user-data.weavemaster.vmware')[1..-1].join)
+#  data['coreos']['etcd']['discovery'] = token
 
-  yaml = YAML.dump(data)
-  File.open('user-data.weavemaster.vmware', 'w') { |file| file.write("#cloud-config\n\n#{yaml}") }
-end
+#  yaml = YAML.dump(data)
+#  File.open('user-data.weavemaster.vmware', 'w') { |file| file.write("#cloud-config\n\n#{yaml}") }
+#end
 
-if File.exists?('user-data.vmware') && ARGV[0].eql?('up')
-  require 'open-uri'
-  require 'yaml'
+#if File.exists?('user-data.vmware') && ARGV[0].eql?('up')
+#  require 'open-uri'
+#  require 'yaml'
 
-  data = YAML.load(IO.readlines('user-data.vmware')[1..-1].join)
-  data['coreos']['etcd']['discovery'] = token
+#  data = YAML.load(IO.readlines('user-data.vmware')[1..-1].join)
+#  data['coreos']['etcd']['discovery'] = token
 
-  yaml = YAML.dump(data)
-  File.open('user-data.vmware', 'w') { |file| file.write("#cloud-config\n\n#{yaml}") }
-end
+#  yaml = YAML.dump(data)
+#  File.open('user-data.vmware', 'w') { |file| file.write("#cloud-config\n\n#{yaml}") }
+#end
 
 #
 # coreos-vagrant is configured through a series of configuration
@@ -59,7 +59,7 @@ end
 $num_instances=3
 
 # Official CoreOS channel from which updates should be downloaded
-$update_channel='stable'
+#$update_channel='stable'
 
 # Log the serial consoles of CoreOS VMs to log/
 # Enable by setting value to true, disable with false
