@@ -275,7 +275,7 @@ config.vm.boot_timeout = 1000
             config.vm.provision "shell", inline: [
             "hostname #{vm_name}",
             "ssh-keygen -f id_rsa -t rsa -N ''",
-            "if [ -f /root/.ssh ] ; then cat id_rsa.pub >> /root/.ssh/authorized_keys && cp id_rsa* /root/.ssh else mkdir /root/.ssh && cat id_rsa.pub >> /root/.ssh/authorized_keys && cp id_rsa* /root/.ssh; fi",
+            "if [ -f /root/.ssh ] ; then cat id_rsa.pub >> /root/.ssh/authorized_keys && cp id_rsa* /root/.ssh else mkdir /root/.ssh && cat id_rsa.pub >> /root/.ssh/authorized_keys && cp id_rsa* /root/.ssh; else mkdir /root/.ssh && cp id_rsa* /root/.ssh && cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys fi",
              "chown $SUDO_USER id_rsa*",
              "sudo apt-get update -y",
              "sudo apt-get install docker.io -y",
