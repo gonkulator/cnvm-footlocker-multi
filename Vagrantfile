@@ -276,15 +276,11 @@ config.vm.boot_timeout = 1000
             "hostname #{vm_name}",
             "ssh-keygen -f id_rsa -t rsa -N ''",
             "if [ -f /root/.ssh ] ; then cat id_rsa.pub >> /root/.ssh/authorized_keys && cp id_rsa* /root/.ssh else mkdir /root/.ssh && cat id_rsa.pub >> /root/.ssh/authorized_keys && cp id_rsa* /root/.ssh; fi",
-#             "sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile",
-#             "sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /home/$SUDO_USER/.profile",
-#            "cat id_rsa.pub >> /root/.ssh/authorized_keys"
-#            "cd /root/.ssh && ssh-keygen -f id_rsa -t rsa -N ''",
-#            "cd /root/.ssh && cat id_rsa.pub >> /root/.ssh/authorized_keys",
-#            "mkdir ~/thekeys && sudo cp /root/.ssh/id_rsa* ~/thekeys",
              "chown $SUDO_USER id_rsa*",
              "sudo apt-get update -y",
-             "sudo apt-get install docker.io -y"
+             "sudo apt-get install docker.io -y",
+             "sudo usermod -aG docker $SUDO_USER",
+             "sudo service docker start"
             ].join('&&')
         end
       end
