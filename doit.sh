@@ -27,11 +27,7 @@ echo "Retrieved cnvm-00 ssh-keys"
 
 targetnodes=($(cat therunninghosts | grep -v cnvm-00))
 
-#for i in ${targetnodes[@]}; do
-#	targetip=$(vagrant ssh-config $i | grep HostName | awk '{print $2}')
-#	targetuser=$(vagrant ssh-config $i | head -3 | grep User | awk '{print $2}')
-#	targetkey=$(vagrant ssh-config $i | grep IdentityFile | awk '{print $2}')
-#	echo "Connecting to $i to do the key needful..."
+
 echo "Target nodes are: ${targetnodes[@]}"
 for i in ${targetnodes[@]}; do
 	vagrant ssh-config $i > sshconfigs/$i-sshconfig
