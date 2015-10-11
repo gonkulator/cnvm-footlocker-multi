@@ -64,7 +64,7 @@ footlockertargets=$(cd ./sshconfigs && for i in $(ls | grep -v cnvm-00) ; do cat
 echo "Pulling build container...."
 ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} "docker pull gonkulatorlabs/cnvm"
 echo "Building...."
-ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm
+ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm"
 
 echo "Cleaning up..."
 rm sshconfigs/*
