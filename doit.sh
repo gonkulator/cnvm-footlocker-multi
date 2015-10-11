@@ -43,7 +43,7 @@ for i in ${targetnodes[@]}; do
 	targetkey=$(cat sshconfigs/$i-sshconfig | grep IdentityFile | awk '{print $2}')
 	targetport=$(cat sshconfigs/$i-sshconfig | head -4 | grep Port | awk '{print $2}')
 	#ssh -p ${targetport} -i ${targetkey} ${targetuser}@${targetip} 'sudo ~ssh-keyscan -t rsa ${keyscantargets} 
-	ssh -p ${targetport} -i ${targetkey} ${targetuser}@${targetip} 'sudo ~/nodekeys/keyscanner.sh ${keyscantargets}'
+	ssh -p ${targetport} -i ${targetkey} ${targetuser}@${targetip} "sudo ~/nodekeys/keyscanner.sh ${keyscantargets}"
 done
 
 echo "Done."
