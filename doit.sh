@@ -31,7 +31,7 @@ targetnodes=($(cat therunninghosts | grep -v cnvm-00))
 #	targetuser=$(vagrant ssh-config $i | head -3 | grep User | awk '{print $2}')
 #	targetkey=$(vagrant ssh-config $i | grep IdentityFile | awk '{print $2}')
 #	echo "Connecting to $i to do the key needful..."
-
+echo "Target nodes are: ${targetnodes[@]}"
 for i in ${targetnodes[@]}; do
 	vagrant ssh-config $i > sshconfigs/$i-sshconfig
 	targetip=$(cat sshconfigs/$i-sshconfig | grep HostName | awk '{print $2}')
@@ -67,9 +67,9 @@ echo "Building...."
 ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} "sudo docker run -v /root/.ssh/id_rsa:/keys/priv -v /root/.ssh/id_rsa.pub:/keys/pub -e NODES=${footlockertargets} gonkulatorlabs/cnvm"
 
 echo "Cleaning up..."
-rm sshconfigs/*
-rm thekeys/id_rsa*
-rm thehosts
-rm therunninghosts
+#rm sshconfigs/*
+#rm thekeys/id_rsa*
+#rm thehosts
+#rm therunninghosts
 
 echo "Done."
