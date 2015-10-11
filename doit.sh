@@ -3,6 +3,12 @@
 
 vagrant up --provider=$1
 
+#zero the host state files
+#touch thehosts
+#touch therunninghosts
+#>thehosts
+#>therunninghosts
+
 mkdir sshconfigs
 vagrant ssh-config cnvm-00 > sshconfigs/cnvm-00-sshconfig
 masterip=$(cat sshconfigs/cnvm-00-sshconfig | grep HostName | awk '{print $2}')
@@ -42,8 +48,20 @@ for i in ${targetnodes[@]}; do
 	targetuser=$(cat sshconfigs/$i-sshconfig | head -3 | grep User | awk '{print $2}')
 	targetkey=$(cat sshconfigs/$i-sshconfig | grep IdentityFile | awk '{print $2}')
 	targetport=$(cat sshconfigs/$i-sshconfig | head -4 | grep Port | awk '{print $2}')
-	#ssh -p ${targetport} -i ${targetkey} ${targetuser}@${targetip} 'sudo ~ssh-keyscan -t rsa ${keyscantargets} 
 	ssh -p ${targetport} -i ${targetkey} ${targetuser}@${targetip} "sudo ~/nodekeys/keyscanner.sh ${keyscantargets}"
 done
+
+echo "Keyscanning master to targets..."
+scp -P ${masterport} -i ${mastersshkey} thekeys/keyscanner.sh ${masteruser}@${masterip}:.
+ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} "sudo ~/keyscanner.sh ${keyscantargets}"
+
+echo "Kicking off Cloud Native VM footlocker builds..."
+
+
+echo "Cleaning up..."
+#rm sshconfigs/*
+#rm thekeys/id_rsa*
+#rm thehosts
+#rm therunninghosts
 
 echo "Done."
