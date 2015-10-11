@@ -21,7 +21,7 @@ mastersshkey=$(cat sshconfigs/cnvm-00-sshconfig | grep IdentityFile | awk '{prin
 masterport=$(cat sshconfigs/cnvm-00-sshconfig | head -4 | grep Port | awk '{print $2}')
 
 ssh-keyscan -p ${masterport} -t rsa ${masterip} >> ~/.ssh/known_hosts 
-ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} "sudo cp id_rsa* /root/.ssh && chown sudo root /root/ssh/id_rsa*"
+ssh -p ${masterport} -i ${mastersshkey} ${masteruser}@${masterip} "sudo cp id_rsa* /root/.ssh && sudo chown root /root/ssh/id_rsa*"
 scp -P ${masterport} -i ${mastersshkey} ${masteruser}@${masterip}:./id_rsa* ./thekeys
 echo "Retrieved cnvm-00 ssh-keys"
 
