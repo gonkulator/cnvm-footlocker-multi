@@ -281,7 +281,7 @@ config.vm.boot_timeout = 1000
              "sudo apt-get install docker.io -y",
              "sudo usermod -aG docker $SUDO_USER",
              "sudo service docker start",
-             "sudo apt-get install linux-image-extra-$(uname -r)"
+             "sudo apt-get install linux-image-extra-$(uname -r) -y"
             ].join('&&')
         end
       end
