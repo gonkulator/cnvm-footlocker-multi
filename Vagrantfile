@@ -194,25 +194,26 @@ config.vm.boot_timeout = 1000
 
 ##do the azure setup
      ["azure"].each do |azure|
-	config.vm.provider azure do |a, override|
-	 a.mgmt_certificate = ENV['AZURE_MGMT_CERT']
-	 a.mgmt_endpoint = ENV['AZURE_MGMT_ENDPOINT']
-	 a.subscription_id = ENV['AZURE_SUB_ID']
-	 a.storage_acct_name = ENV['AZURE_STORAGE_ACCT']
-	 a.vm_image = ENV['AZURE_VM_IMAGE']
-         a.vm_user = 'core' # defaults to 'vagrant' if not provided
-         a.vm_password = ''
-         a.vm_name = config.vm.hostname  
-	 a.cloud_service_name = 'gonkulator' 
-         a.deployment_name = config.vm.hostname 
-         a.vm_location = 'West US' # e.g., West US
-         override.ssh.username = 'ubuntu' 
-	 override.ssh.private_key_path = ENV['AZURE_SSH_PRIV_KEY']
-	 a.private_key_file = ENV['AZURE_PRIV_KEY']
-	 a.certificate_file = ENV['AZURE_CERT_FILE']
-         a.ssh_port = ssh_port
-       	 end
-       end
+	   config.vm.provider azure do |a, override|
+	     a.mgmt_certificate = ENV['AZURE_MGMT_CERT']
+	     a.mgmt_endpoint = ENV['AZURE_MGMT_ENDPOINT']
+	     a.subscription_id = ENV['AZURE_SUB_ID']
+	     a.storage_acct_name = ENV['AZURE_STORAGE_ACCT']
+	     a.vm_image = ENV['AZURE_VM_IMAGE']
+       a.vm_size = ENV['AZURE_VM_SIZE']
+       a.vm_user = 'core' # defaults to 'vagrant' if not provided
+       a.vm_password = ''
+       a.vm_name = config.vm.hostname  
+	     a.cloud_service_name = 'gonkulator' 
+       a.deployment_name = config.vm.hostname 
+       a.vm_location = 'West US' # e.g., West US
+       override.ssh.username = 'ubuntu' 
+	     override.ssh.private_key_path = ENV['AZURE_SSH_PRIV_KEY']
+	     a.private_key_file = ENV['AZURE_PRIV_KEY']
+	     a.certificate_file = ENV['AZURE_CERT_FILE']
+       a.ssh_port = ssh_port
+       	end
+      end
 
  ##do the digital_ocean setup
      ["digital_ocean"].each do |digital_ocean|
