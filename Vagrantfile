@@ -210,7 +210,7 @@ config.vm.boot_timeout = 1000
        override.ssh.username = 'ubuntu' 
 	     override.ssh.private_key_path = ENV['AZURE_SSH_PRIV_KEY']
 	     a.private_key_file = ENV['AZURE_PRIV_KEY']
-	     a.certificate_file = ENV['AZURE_CERT_FILE']
+	     #a.certificate_file = ENV['AZURE_CERT_FILE']
        a.ssh_port = ssh_port
        	end
       end
