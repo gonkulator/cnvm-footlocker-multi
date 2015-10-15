@@ -211,7 +211,7 @@ config.vm.boot_timeout = 1000
 	     a.private_key_file = ENV['AZURE_PRIV_KEY']
 	     #a.certificate_file = ENV['AZURE_CERT_FILE']
        a.ssh_port = ssh_port
-       a.tcp_endpoints = '22:22, 3389:3389'
+    #   a.tcp_endpoints = '22:22, 3389:3389'
     #   a.udp_endpoints = '3389:3389'
        	end
       end
